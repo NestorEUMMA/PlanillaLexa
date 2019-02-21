@@ -21,21 +21,21 @@ use app\assets\DashboardAsset;
 if (!empty($_SESSION['user']))
   {
 
-     $urluri = str_replace('?'.$_SERVER["QUERY_STRING"],"", $_SERVER["REQUEST_URI"] );
-     $url = str_replace("/SisPlanillasLexa/web/","../",  $urluri );
+     // $urluri = str_replace('?'.$_SERVER["QUERY_STRING"],"", $_SERVER["REQUEST_URI"] );
+     // $url = str_replace("/SisPlanillasLexa/web/","../",  $urluri );
 
 
 
-        $validarmenu = "select me.url as 'url', mu.MenuUsuarioActivo from menudetalle me
-                  inner join menuusuario mu on me.IdMenuDetalle = mu.IdMenuDetalle
-                  inner join usuario u on mu.IdUsuario = u.IdUsuario
-                  where mu.MenuUsuarioActivo = 1 and u.InicioSesion = '" . $_SESSION['user'] . "'  and me.Url = '" . $url . "'";
-        $resultadovalidarmenu = $mysqli->query($validarmenu);
+     //    $validarmenu = "select me.url as 'url', mu.MenuUsuarioActivo from menudetalle me
+     //              inner join menuusuario mu on me.IdMenuDetalle = mu.IdMenuDetalle
+     //              inner join usuario u on mu.IdUsuario = u.IdUsuario
+     //              where mu.MenuUsuarioActivo = 1 and u.InicioSesion = '" . $_SESSION['user'] . "'  and me.Url = '" . $url . "'";
+     //    $resultadovalidarmenu = $mysqli->query($validarmenu);
 
 
-      if (mysqli_num_rows($resultadovalidarmenu) <> 0)
-          {
-             header( "Location: ../site/index" );
+      // if (mysqli_num_rows($resultadovalidarmenu) <> 0)
+      //     {
+      //        header( "Location: ../site/index" );
 
 
 
@@ -131,18 +131,18 @@ DashboardAsset::register($this);
 <?php $this->endPage() ?>
 
     <?php
-       }
-      else
-      {
-              echo "
-      <script>
-        alert('Usted no tiene permiso para ingresar a esta pagina');
-        document.location='../site/index';
+    //    }
+    //   else
+    //   {
+    //           echo "
+    //   <script>
+    //     alert('Usted no tiene permiso para ingresar a esta pagina');
+    //     document.location='../site/index';
 
-      </script>
-      ";
+    //   </script>
+    //   ";
 
-      }
+    //   }
     }
 
     else{

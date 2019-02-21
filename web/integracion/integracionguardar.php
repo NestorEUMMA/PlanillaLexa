@@ -71,7 +71,7 @@
 
 
      $insert = "INSERT INTO integracionpeachtree(Date,Reference,Account,Description,Amount,UsedReimbursable,TransactionPeriod,TransactionNumber,CosolidatedTransaction,RecurNumber,RecurFrequency,Mes,Periodo,Quincena,dependiente)"
-                        . "VALUES ('$fecha','PLANILLA','1234','cuenta','$percepciones','FALSE',13,1,'FALSE',0,0,'$mes','$periodo','$quincena',0)";
+                        . "VALUES ('$fecha','PLANILLA','$codigoservicio','$cuentaservicio','$percepciones','FALSE',13,1,'FALSE',0,0,'$mes','$periodo','$quincena',0)";
      $resultadoinsert = $mysqli->query($insert);
 
      $insert = "INSERT INTO integracionpeachtree(Date,Reference,Account,Description,Amount,UsedReimbursable,TransactionPeriod,TransactionNumber,CosolidatedTransaction,RecurNumber,RecurFrequency,Mes,Periodo,Quincena,dependiente)"
