@@ -75,8 +75,8 @@ class EmpresaController extends Controller
             if (!empty($model->file)) {
               $imageName = $model->NombreEmpresa;
               $model->file = UploadedFile::getInstance($model, 'file');
-              $model->file->saveAs( 'uploads/usuarios/'.$imageName.'.'.$model->file->extension);
-              $model->ImagenEmpresa = 'uploads/usuarios/'.$imageName.'.'.$model->file->extension;
+              $model->file->saveAs( 'uploads/empresas/'.$imageName.'.'.$model->file->extension);
+              $model->ImagenEmpresa = 'uploads/empresas/'.$imageName.'.'.$model->file->extension;
               $model->save(false);
             }
             $model->save(false);
@@ -99,8 +99,8 @@ class EmpresaController extends Controller
           if (!empty($model->file)) {
             $imageName = $model->NombreEmpresa;
             $model->file = UploadedFile::getInstance($model, 'file');
-            $model->file->saveAs( 'uploads/usuarios/'.$imageName.'.'.$model->file->extension);
-            $model->ImagenEmpresa = 'uploads/usuarios/'.$imageName.'.'.$model->file->extension;
+            $model->file->saveAs( 'uploads/empresas/'.$imageName.'.'.$model->file->extension);
+            $model->ImagenEmpresa = 'uploads/empresas/'.$imageName.'.'.$model->file->extension;
             $model->save(false);
           }
 
@@ -142,7 +142,7 @@ class EmpresaController extends Controller
         }
     }
 
-        public function actionSubcat() {
+      public function actionSubcat() {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
         $parents = $_POST['depdrop_parents'];

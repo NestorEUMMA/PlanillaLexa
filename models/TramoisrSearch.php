@@ -49,7 +49,7 @@ class TramoisrSearch extends Tramoisr
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
                                      'pagination' => [
-        'pagesize' => 10,
+        'pagesize' => 25,
     ],
         ]);
 

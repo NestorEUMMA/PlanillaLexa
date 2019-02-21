@@ -48,7 +48,7 @@ class TramoisssSearch extends Tramoisss
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
                                      'pagination' => [
-        'pagesize' => 10,
+        'pagesize' => 25,
     ],
         ]);
 
