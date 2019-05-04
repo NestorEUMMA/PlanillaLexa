@@ -191,7 +191,7 @@ include '../include/dbconnect.php';
                                            return '$' . ' ' . $model->MontoAnticipo;
                                        }
                                     ] ,
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:115px;'], 'template' => " $view $update $delete $report"],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete $report"],
 
                                 ],
                             ]); ?>

@@ -176,7 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ],
                                     // 'TipoPermiso',
 
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:100px;'], 'template' => " $view $update"],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:110px;'], 'template' => " $view $update"],
                                 ],
                             ]); ?>
                                               </table>

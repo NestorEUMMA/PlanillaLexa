@@ -201,7 +201,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                      'PeriodoAccion',
                                      'MesAccion',
 
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:115px;'], 'template' => " $view $update $delete $report "],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete $report "],
                                 ],
                             ]); ?>
                                               </table>

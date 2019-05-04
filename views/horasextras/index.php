@@ -195,7 +195,7 @@ include '../include/dbconnect.php';
                                     ] ,
 
 
-                                  ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:115px;'], 'template' => " $view $update $delete {report} "],
+                                  ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete {report} "],
                                 ],
                             ]); ?>
                                               </table>

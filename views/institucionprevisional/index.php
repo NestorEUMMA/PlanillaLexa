@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'DescripcionInstitucion',
 
                                     ['class' => 'yii\grid\ActionColumn',
-                                     'options' => ['style' => 'width:115px;'],
+                                     'options' => ['style' => 'width:155px;'],
                                     ],
                                 ],
                             ]); ?>

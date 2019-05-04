@@ -171,7 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'PeriodoPermiso',
                                     'MesPermiso',
                                     'DescripcionPermiso',
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:100px;'], 'template' => " $view  $delete "],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:110px;'], 'template' => " $view  $delete "],
                                 ],
                             ]); ?>
                           </table>

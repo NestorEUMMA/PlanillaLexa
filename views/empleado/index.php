@@ -168,7 +168,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                      'idPuestoEmpresa.DescripcionPuestoEmpresa',
                                      'DeducIsssAfp:boolean',
                                      'NoDependiente:boolean',
-                                      'DeducIsssIpsfa:boolean',
+                                     'DeducIsssIpsfa:boolean',
                                      'FechaContratacion',
 
                                      [
@@ -181,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                           'options' => ['style' => 'width:100px;'],
                                       ],
 
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:115px;'], 'template' => " $view $update $delete {report} "],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete {report} "],
 
                                 ],
                             ]); ?>
