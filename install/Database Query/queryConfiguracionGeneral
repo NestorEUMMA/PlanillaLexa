@@ -1,0 +1,5 @@
+CREATE TABLE `db_clinica`.`configuraciongeneral` (
+  `IdConfiguracionGeneral` INT NOT NULL AUTO_INCREMENT,
+  `IpServidora` VARCHAR(45) NULL,
+  `NombreCarpeta` VARCHAR(45) NULL,
+  PRIMARY KEY (`IdConfiguracionGeneral`));

@@ -58,7 +58,7 @@ session_start();
 										$resultInsermenuusuario = $mysqli->query($queryMenuUsuario);
 								}
 
-				$querymenupermiso = "SELECT  IdMenuDetalle as 'IDMENUDETALLE', IdMenu as 'IDMENU' FROM menudetalle
+			  $querymenupermiso = "SELECT  IdMenuDetalle as 'IDMENUDETALLE', IdMenu as 'IDMENU' FROM menudetalle
 			             where Icono = 'ADMIN'  and IdMenu = 9";
 			  $resultadomenupermiso = $mysqli->query($querymenupermiso);
 									 while ($test = $resultadomenupermiso->fetch_assoc())
