@@ -77,4 +77,9 @@ class Usuario extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Puesto::className(), ['IdPuesto' => 'IdPuesto']);
     }
+
+    public function getFullName()
+{
+        return $this->Nombres.' '.$this->Apellidos;
+}
 }
