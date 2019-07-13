@@ -15,13 +15,12 @@ use Yii;
  * @property string $GiroFiscal
  * @property string $NrcEmpresa
  * @property string $NitEmpresa
- * @property string $IdEmpleado
+ * @property string $Representante
 * @property string $NuPatronal
 * @property string $ImagenEmpresa
  *
  * @property Departamentos $idDepartamentos
  * @property Municipios $idMunicipios
- * @property Empleado $idEmpleado
  */
 class Empresa extends \yii\db\ActiveRecord
 {
@@ -41,13 +40,12 @@ class Empresa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['NombreEmpresa', 'IdDepartamentos', 'IdMunicipios','IdEmpleado', 'NrcEmpresa', 'NitEmpresa','NuPatronal'], 'string', 'max' => 45],
-            [['NombreEmpresa', 'IdDepartamentos', 'IdMunicipios','IdEmpleado', 'NrcEmpresa', 'NitEmpresa','NuPatronal','GiroFiscal','Direccion'], 'required'],
+            [['NombreEmpresa', 'IdDepartamentos', 'IdMunicipios','Representante', 'NrcEmpresa', 'NitEmpresa','NuPatronal'], 'string', 'max' => 45],
+            [['NombreEmpresa', 'IdDepartamentos', 'IdMunicipios','Representante', 'NrcEmpresa', 'NitEmpresa','NuPatronal','GiroFiscal','Direccion'], 'required'],
             [['GiroFiscal'], 'string', 'max' => 100],
             [['Direccion'], 'string', 'max' => 500],
             [['IdDepartamentos'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['IdDepartamentos' => 'IdDepartamentos']],
             [['IdMunicipios'], 'exist', 'skipOnError' => true, 'targetClass' => Municipios::className(), 'targetAttribute' => ['IdMunicipios' => 'IdMunicipios']],
-            [['IdEmpleado'], 'exist', 'skipOnError' => true, 'targetClass' => Empleado::className(), 'targetAttribute' => ['IdEmpleado' => 'IdEmpleado']],
             [['file'], 'file','skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif'],
             [['ImagenEmpresa'], 'string', 'max' => 500],
         ];
@@ -67,8 +65,7 @@ class Empresa extends \yii\db\ActiveRecord
             'GiroFiscal' => 'Giro Fiscal',
             'NrcEmpresa' => 'NRC',
             'NitEmpresa' => 'NIT',
-            'IdEmpleado' => 'Representante Legal',
-            'idEmpleado.fullname' => 'Representante Legal',
+            'Representante' => 'Representante Legal',
             'NuPatronal' => 'Numero Patronal',
             'ImagenEmpresa' => 'Logo',
             'file' => 'Logo'
@@ -86,10 +83,7 @@ class Empresa extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdEmpleado()
-    {
-        return $this->hasOne(Empleado::className(), ['IdEmpleado' => 'IdEmpleado']);
-    }
+
 
     /**
      * @return \yii\db\ActiveQuery

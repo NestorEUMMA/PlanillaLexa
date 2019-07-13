@@ -19,7 +19,7 @@ class EmpresaSearch extends Empresa
     {
         return [
             [['IdEmpresa'], 'integer'],
-            [['NombreEmpresa', 'Direccion', 'IdDepartamentos', 'IdMunicipios', 'GiroFiscal', 'NrcEmpresa', 'NuPatronal' ,'NitEmpresa', 'EmpleadoActivo','IdEmpleado', 'ImagenEmpresa'], 'safe'],
+            [['NombreEmpresa', 'Direccion', 'IdDepartamentos', 'IdMunicipios', 'GiroFiscal', 'NrcEmpresa', 'NuPatronal' ,'NitEmpresa', 'EmpleadoActivo','Representante', 'ImagenEmpresa'], 'safe'],
         ];
     }
 
@@ -72,7 +72,7 @@ class EmpresaSearch extends Empresa
             ->andFilterWhere(['like', 'GiroFiscal', $this->GiroFiscal])
             ->andFilterWhere(['like', 'NrcEmpresa', $this->NrcEmpresa])
             ->andFilterWhere(['like', 'NitEmpresa', $this->NitEmpresa])
-            ->andFilterWhere(['like', 'IdEmpleado', $this->IdEmpleado])
+            ->andFilterWhere(['like', 'Representante', $this->Representante])
             ->andFilterWhere(['like', 'NuPatronal', $this->NuPatronal])
             ->andFilterWhere(['like', 'EmpleadoActivo', $this->EmpleadoActivo])
             ->andFilterWhere(['like', 'ImagenEmpresa', $this->ImagenEmpresa]);

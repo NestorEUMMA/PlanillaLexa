@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'NrcEmpresa',
             'NitEmpresa',
             'NuPatronal',
-            'idEmpleado.fullname',
+            'Representante',
             [
                'attribute'=>'ImagenEmpresa',
                'value'=> Yii::$app->homeUrl.'/'.$model->ImagenEmpresa,

@@ -58,16 +58,8 @@ use kartik\file\FileInput;
 
     <?= $form->field($model, 'NuPatronal')->textInput(['maxlength' => true]) ?>
 
-    <?php
-   echo $form->field($model, 'IdEmpleado')->widget(Select2::classname(), [
-       'data' => ArrayHelper::map(Empleado::find()->where(['EmpleadoActivo' => 1])->all(), 'IdEmpleado', 'fullName'),
-       'language' => 'es',
-       'options' => ['placeholder' => ' Selecione ...'],
-       'pluginOptions' => [
-           'allowClear' => true
-       ],
-   ]);
-   ?>
+
+  <?= $form->field($model, 'Representante')->textInput(['maxlength' => true]) ?>
 
    <?= $form->field($model, 'file')->widget(FileInput::classname(), [
          'options' => ['accept'=>'uploads/*'],

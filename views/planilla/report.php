@@ -45,6 +45,7 @@ else {
 
  $diaIni = substr($FechaIni, 8, 2);
  $diaFin = substr($FechaFin, 8, 2);
+ $mesfecha = substr($FechaFin, 5, 2);
  if(($diaIni = substr($FechaIni, 8, 2)) >= 01 and ($diaFin = substr($FechaFin, 8, 2)) <= 15){
    $quincena = 1;
  }
@@ -76,45 +77,45 @@ require("queryResultPlanillaTot.php");
 require("queryResultPlanillaPrint.php");
 require("queryResultPlanillaTotPrint.php");
 
-  $mes = strftime("%B");
-      if($mes == 'January'){
+  $mes = $mesfecha;
+      if($mes == '01'){
           $mes = 'Enero';
       }
-      elseif($mes == 'February'){
+      elseif($mes == '02'){
           $mes = 'Febrero';
       }
-      elseif($mes == 'March'){
+      elseif($mes == '03'){
           $mes = 'Marzo';
       }
-      elseif($mes == 'April'){
+      elseif($mes == '04'){
           $mes = 'Abril';
       }
-      elseif($mes == 'May'){
+      elseif($mes == '05'){
           $mes = 'Mayo';
       }
-      elseif($mes == 'June'){
+      elseif($mes == '06'){
           $mes = 'Junio';
       }
-      elseif($mes == 'July'){
+      elseif($mes == '07'){
           $mes = 'Julio';
       }
-      elseif($mes == 'August'){
+      elseif($mes == '08'){
           $mes = 'Agosto';
       }
-      elseif($mes == 'September'){
+      elseif($mes == '09'){
           $mes = 'Septiembre';
       }
-      elseif($mes == 'October'){
+      elseif($mes == '10'){
           $mes = 'Octubre';
       }
-      elseif($mes == 'November'){
+      elseif($mes == '11'){
           $mes = 'Noviembre';
       }
       else{
           $mes = 'Diciembre';
       }
 
-  $anio = date("Y");
+   $anio = substr($FechaIni, 0, 4);
 
   $resultadoquerytotplanilla = $mysqli->query($querytotplanilla);
   $ttotsalario = 0;
@@ -140,7 +141,6 @@ require("queryResultPlanillaTotPrint.php");
                  $ttotprecepcion +=  $test['TOTALPERCEPCION'];
                  $ttotanticipos +=  $test['ANTICIPOS'];
                  $ttotsalarioliquido +=  $test['SALARIOLIQUIDO'];
-
                  $idempleado = $test['IDEMPLEADO'];
                  $nombreCom = $test['NOMBRECOMPLETO'];
                  $dias = $test['DIAS'];

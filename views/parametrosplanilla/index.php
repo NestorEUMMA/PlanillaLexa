@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="table-responsive">
                         <table class="table">
 <!--
-                                                <?php  echo $this->render('_search', ['model' => $searchModel]); ?> -->
+                         <?php  echo $this->render('_search', ['model' => $searchModel]); ?> -->
 
                         <?= GridView::widget([
                                 'dataProvider' => $dataProvider,
@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'PeriodoPlanilla',
                                 'QuincenaPlanilla',
 
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:75px;'], 'template' => "{report} {view}"],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:115px;'], 'template' => "{report} {view}"],
                                 ],
                             ]); ?>
                                               </table>

@@ -192,7 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                            return '$' . ' ' . $model->MontoAguinaldo;
                                        }
                                     ] ,
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete $report"],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:205px;'], 'template' => " $view $update $delete"],
                                 ],
                             ]); ?>
                       </table>

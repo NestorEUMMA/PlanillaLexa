@@ -16296,45 +16296,46 @@
  WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 0
  group by E.IdEmpleado ";
 
-                   $mes = strftime("%B");
-                       if($mes == 'January'){
-                           $mes = 'Enero';
-                       }
-                       elseif($mes == 'February'){
-                           $mes = 'Febrero';
-                       }
-                       elseif($mes == 'March'){
-                           $mes = 'Marzo';
-                       }
-                       elseif($mes == 'April'){
-                           $mes = 'Abril';
-                       }
-                       elseif($mes == 'May'){
-                           $mes = 'Mayo';
-                       }
-                       elseif($mes == 'June'){
-                           $mes = 'Junio';
-                       }
-                       elseif($mes == 'July'){
-                           $mes = 'Julio';
-                       }
-                       elseif($mes == 'August'){
-                           $mes = 'Agosto';
-                       }
-                       elseif($mes == 'September'){
-                           $mes = 'Septiembre';
-                       }
-                       elseif($mes == 'October'){
-                           $mes = 'Octubre';
-                       }
-                       elseif($mes == 'November'){
-                           $mes = 'Noviembre';
-                       }
-                       else{
-                           $mes = 'Diciembre';
-                       }
+$mesfecha = substr($FechaFin, 5, 2);
+                   $mes = $mesfecha;
+      if($mes == '01'){
+          $mes = 'Enero';
+      }
+      elseif($mes == '02'){
+          $mes = 'Febrero';
+      }
+      elseif($mes == '03'){
+          $mes = 'Marzo';
+      }
+      elseif($mes == '04'){
+          $mes = 'Abril';
+      }
+      elseif($mes == '05'){
+          $mes = 'Mayo';
+      }
+      elseif($mes == '06'){
+          $mes = 'Junio';
+      }
+      elseif($mes == '07'){
+          $mes = 'Julio';
+      }
+      elseif($mes == '08'){
+          $mes = 'Agosto';
+      }
+      elseif($mes == '09'){
+          $mes = 'Septiembre';
+      }
+      elseif($mes == '10'){
+          $mes = 'Octubre';
+      }
+      elseif($mes == '11'){
+          $mes = 'Noviembre';
+      }
+      else{
+          $mes = 'Diciembre';
+      }
 
-                   $anio = date("Y");
+   $anio = substr($FechaIni, 0, 4);
 
                        $resultadoquerytotplanilla = $mysqli->query($querytotplanilla);
 
@@ -16386,7 +16387,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
 </head>
-<body onload="window.print();">
+<body>
 <div class="wrapper">
   <!-- Main content -->
   <div class="invoice">
@@ -16503,3 +16504,8 @@
 </div>
 </body>
 </html>
+
+<script type="text/javascript">
+  window.print();
+   window.close();
+</script>

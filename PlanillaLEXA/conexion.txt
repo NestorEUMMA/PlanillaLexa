@@ -1,0 +1,7 @@
+localhost
+db_planillalexa
+root 
+nest2015
+
+
+
