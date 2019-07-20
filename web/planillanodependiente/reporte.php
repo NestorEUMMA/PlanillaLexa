@@ -83,8 +83,9 @@ group by E.IdEmpleado";
 
 
              $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO', SUM(ho.MontoISRHonorarios) as 'RENTA', SUM(ho.MontoPagar) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
+             SUM(ho.MontoHonorario) as 'MONTO',SUM(AN.MontoAnticipo) as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - SUM(AN.MontoAnticipo)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
              INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
+             INNER JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
              WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
              group by E.IdEmpleado";
 
@@ -92,8 +93,9 @@ group by E.IdEmpleado";
 
 
              $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO', SUM(ho.MontoISRHonorarios) as 'RENTA', SUM(ho.MontoPagar) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
+             SUM(ho.MontoHonorario) as 'MONTO',SUM(AN.MontoAnticipo) as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - SUM(AN.MontoAnticipo)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
              INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
+             INNER JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
              WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
              group by E.IdEmpleado";
 
@@ -103,6 +105,7 @@ group by E.IdEmpleado";
                  $ttotisr = 0;
                  $ttotafp = 0;
                  $ttotisss = 0;
+                 $ttotanticipos = 0;
                  $ttothonorariotot = 0;
 
 
@@ -112,12 +115,14 @@ group by E.IdEmpleado";
                                 $ttotisr += $test['RENTA'];
                                 $ttotisss += $test['ISSS'];
                                 $ttotafp += $test['AFP'];
+                                $ttotanticipos += $test['ANTICIPOS'];
                                 $ttothonorariotot += $test['LIQUIDO'];
 
 
                                 $nombreCom = $test['NOMBRECOMPLETO'];
                                 $tothonorario = $test['MONTO'];
                                 $totisr = $test['RENTA'];
+                                $totanticipos = $test['ANTICIPOS'];
                                 $tothonorariototal = $test['LIQUIDO'];
 
                             }
@@ -206,6 +211,7 @@ group by E.IdEmpleado";
                                         <td><strong><center>EMPLEADO</center></strong></td>
                                         <td><strong><center>HONORARIO</center></strong></td>
                                         <td><strong><center>RENTA</center></strong></td>
+                                        <td><strong><center>ANTICIPOS</center></strong></td>
                                         <td><strong><center>LIQUIDO</center></strong></td>
 
                                       </tr>
@@ -219,6 +225,7 @@ group by E.IdEmpleado";
                                        echo"<td width='90px'><center>".$test['NOMBRECOMPLETO']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['MONTO']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['RENTA']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['ANTICIPOS']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['LIQUIDO']."</center></td>";
                                   }
                                   ?>
@@ -229,6 +236,7 @@ group by E.IdEmpleado";
                                         <td align="right"><strong>TOTAL:</strong></td>
                                         <td><strong><center>$<?php echo number_format($ttothonorario,2); ?></center></strong></td>
                                         <td><strong><center>$<?php echo number_format($ttotisr,2); ?></center></strong></td>
+                                        <td><strong><center>$<?php echo number_format($ttotanticipos,2); ?></center></strong></td>
                                         <td><strong><center>$<?php echo number_format($ttothonorariotot,2); ?></center></strong></td>
                                     </tr>
                                   </thead>
@@ -265,12 +273,12 @@ group by E.IdEmpleado";
                                 <?php
                                   while ($test = $resultadoqueryplanilla->fetch_assoc())
                                 {
-                                     echo"<tr>";
-                                     echo"<td width='90px'><center>".$test['NOMBRECOMPLETO']."</center></td>";
-                                     echo"<td width='60px'><center>$ ".$test['MONTO']."</center></td>";
-                                     echo"<td width='60px'><center>$ ".$test['AFP']."</center></td>";
-                                     echo"<td width='60px'><center>$ ".$test['ISSS']."</center></td>";
-                                     echo"<td width='60px'><center>$ ".$test['LIQUIDO']."</center></td>";
+                                    echo"<tr>";
+                                       echo"<td width='90px'><center>".$test['NOMBRECOMPLETO']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['MONTO']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['RENTA']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['ANTICIPOS']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['LIQUIDO']."</center></td>";
                                 }
                                 ?>
 
@@ -281,6 +289,7 @@ group by E.IdEmpleado";
                                       <td><strong><center>$<?php echo number_format($ttothonorario,2); ?></center></strong></td>
                                       <td><strong><center>$<?php echo number_format($ttotafp,2); ?></center></strong></td>
                                       <td><strong><center>$<?php echo number_format($ttotisss,2); ?></center></strong></td>
+                                      <td><strong><center>$<?php echo number_format($ttotanticipos,2); ?></center></strong></td>
                                       <td><strong><center>$<?php echo number_format($ttothonorariotot,2); ?></center></strong></td>
                                   </tr>
                                 </thead>

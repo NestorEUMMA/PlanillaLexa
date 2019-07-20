@@ -1,0 +1,17 @@
+ALTER TABLE `db_planillalexa`.`bonos`
+ADD COLUMN `IdUsuario` INT(11) NULL,
+ADD COLUMN `IdEmpresa` INT(11) NULL,
+ADD INDEX `fk_bonos_usuario1_idx1` (`IdUsuario` ASC),
+ADD INDEX `fk_bonos_empresa1_idx1` (`IdEmpresa` ASC);
+
+ALTER TABLE `db_planillalexa`.`bonos` 
+ADD CONSTRAINT `fk_bonos_usuario1`
+  FOREIGN KEY (`IdUsuario`)
+  REFERENCES `db_planillalexa`.`usuario` (`IdUsuario`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_bonos_empresa1`
+  FOREIGN KEY (`IdEmpresa`)
+  REFERENCES `db_planillalexa`.`empresa` (`IdEmpresa`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

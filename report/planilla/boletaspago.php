@@ -5439,8 +5439,8 @@ AS 'TOTALPERCEPCION',
 
 /********************************** CALCULO ANTICIPOS ********************************/
 
-(CASE WHEN (SELECT SUM(Anticipos)  where FechaTransaccion between '$FechaIni' and '2018-08-30')  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
-where FechaTransaccion between '$FechaIni' and '2018-08-30') END)
+(CASE WHEN (SELECT SUM(Anticipos)  where FechaTransaccion between '$FechaIni' and '$FechaFin')  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
+where FechaTransaccion between '$FechaIni' and '$FechaFin') END)
 
 as 'ANTICIPOS',
 
