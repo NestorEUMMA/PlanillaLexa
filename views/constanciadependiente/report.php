@@ -17,23 +17,9 @@ if(!isset($_SESSION))
 $id = $model->IdEmpleado;
 $Tipo = 'MENSUAL';
 $queryempresa = "select
-em.NombreEmpresa, em.Direccion, em.NitEmpresa, d.NombreDepartamento, em.GiroFiscal,
-concat(e.PrimerNomEmpleado ,' ',e.SegunNomEmpleado,' ',e.PrimerApellEmpleado,' ',e.SegunApellEmpleado) as Nombre,
-e.Genero as Sexo,
-TIMESTAMPDIFF(YEAR, e.FNacimiento,CURDATE()) AS Edad,
-es.DescripcionEstadoCivil as EstadoCivil,
-e.Profesion as Profesion,
-e.Direccion as perDireccion,
-e.NumTipoDocumento as DUI,
-e.DuiExpedido as Expedido,
-e.DuiEl as El,
-e.DuiDe as De,
-e.OtrosDatos as OtrosDatos,
-e.Nit as Nit
+em.NombreEmpresa, em.Direccion, em.NitEmpresa, em.GiroFiscal, em.Representante
 from empresa em
 inner join departamentos d on em.IdDepartamentos = d.IdDepartamentos
-inner join empleado e on em.IdEmpleado = e.IdEmpleado
-left join estadocivil es on e.IdEstadoCivil = es.IdEstadoCivil
 where em.IdEmpresa = 1";
 $resultadoqueryempresa = $mysqli->query($queryempresa);
 while ($test = $resultadoqueryempresa->fetch_assoc())
@@ -41,20 +27,8 @@ while ($test = $resultadoqueryempresa->fetch_assoc())
   $empresa = $test['NombreEmpresa'];
   $direccionempresa = $test['Direccion'];
   $nitempresa = $test['NitEmpresa'];
-  $departamento = $test['NombreDepartamento'];
-  $emnombre = $test['Nombre'];
-  $emsexo = $test['Sexo'];
-  $emedad = $test['Edad'];
-  $emestadocivil = $test['EstadoCivil'];
-  $emprofesion = $test['Profesion'];
-  $emdireccion = $test['perDireccion'];
-  $emdui = $test['DUI'];
-  $emexpedido = $test['Expedido'];
-  $emel = $test['El'];
-  $emde = $test['De'];
-  $emotrosdatos = $test['OtrosDatos'];
-  $emnit = $test['Nit'];
   $giro = $test['GiroFiscal'];
+  $emnombre = $test['Representante'];
 
 }
 
