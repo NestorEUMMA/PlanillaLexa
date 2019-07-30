@@ -26,7 +26,7 @@ session_start();
       if(($diaIni = substr($FechaIni, 8, 2)) >= 01 and ($diaFin = substr($FechaFin, 8, 2)) <= 15){
         $quincena = 1;
       }
-  elseif(($diaIni = substr($FechaIni, 8, 2)) >= 15 and ($diaFin = substr($FechaFin, 8, 2)) <= 31){
+  elseif(($diaIni = substr($FechaIni, 8, 2)) >= 16 and ($diaFin = substr($FechaFin, 8, 2)) <= 31){
          $quincena = 2;
       }
       else{
@@ -8068,8 +8068,8 @@ AND ((CONVERT((E.SalarioNominal/2), DECIMAL(10,2)) -
 
 	/********************************** CALCULO ANTICIPOS ********************************/
 
-	(CASE WHEN (SELECT SUM(Anticipos)  where FechaTransaccion between '$FechaIni' and '2018-08-30')  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
-	where FechaTransaccion between '$FechaIni' and '2018-08-30') END)
+	(CASE WHEN (SELECT SUM(Anticipos)  where FechaTransaccion between '$FechaIni' and '$FechaFin')  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
+	where FechaTransaccion between '$FechaIni' and '$FechaFin') END)
 
 	as 'ANTICIPOS',
 

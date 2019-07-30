@@ -37,7 +37,7 @@ else{
 
 
 $queryplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO', SUM(ho.MontoHonorario) as 'MONTO', SUM(ho.MontoISRHonorarios) as 'RENTA', SUM(ho.MontoHonorario) as 'LIQUIDO' from honorario ho
-INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
+LEFT JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
 WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
 group by E.IdEmpleado";
 
@@ -83,9 +83,9 @@ group by E.IdEmpleado";
 
 
              $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO',SUM(AN.MontoAnticipo) as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - SUM(AN.MontoAnticipo)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
+             SUM(ho.MontoHonorario) as 'MONTO', CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END  as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - (CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
              INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
-             INNER JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
+             LEFT JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
              WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
              group by E.IdEmpleado";
 
@@ -93,9 +93,9 @@ group by E.IdEmpleado";
 
 
              $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO',SUM(AN.MontoAnticipo) as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - SUM(AN.MontoAnticipo)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
+             SUM(ho.MontoHonorario) as 'MONTO', CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END  as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - (CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
              INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
-             INNER JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
+             LEFT JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
              WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
              group by E.IdEmpleado";
 

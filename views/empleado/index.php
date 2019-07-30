@@ -181,7 +181,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                           'options' => ['style' => 'width:100px;'],
                                       ],
 
-                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:155px;'], 'template' => " $view $update $delete {report} "],
+                                    ['class' => 'yii\grid\ActionColumn', 'options' => ['style' => 'width:205px;'], 'template' => " $view $update $delete {report} "],
 
                                 ],
                             ]); ?>

@@ -31,7 +31,7 @@ require("tools/NumeroALetras.php");
  if(($diaIni = substr($FechaIni, 8, 2)) >= 01 and ($diaFin = substr($FechaFin, 8, 2)) <= 15){
    $quincena = 1;
  }
- elseif(($diaIni = substr($FechaIni, 8, 2)) >= 15 and ($diaFin = substr($FechaFin, 8, 2)) <= 31){
+ elseif(($diaIni = substr($FechaIni, 8, 2)) >= 16 and ($diaFin = substr($FechaFin, 8, 2)) <= 31){
     $quincena = 2;
  }
  else{

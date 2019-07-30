@@ -34,7 +34,7 @@
 
 
 
-      $queryplanilla = " SELECT pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+      $queryplanilla = " SELECT pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO', ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT',
 
 /**************************** CALCULO SALARIO **************************/
 (CONVERT((E.SalarioNominal/2), DECIMAL(10,2)) -
@@ -8147,6 +8147,7 @@ AS 'SALARIOLIQUIDO'
 FROM Empleado E
 LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
 LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on E.IdBanco = ba.IdBanco
 WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 0
 group by E.IdEmpleado
  ";
@@ -8250,6 +8251,7 @@ group by E.IdEmpleado
     while ($row = $resultadoqueryplanilla->fetch_assoc())
   {
        $row['NOMBRECOMPLETO'];
+       $row['NIT'];
        $row['IDEMPLEADO'];
        $row['PUESTOEMPRESA'];
        $row['SALARIO'];
@@ -8296,7 +8298,7 @@ group by E.IdEmpleado
      </h5>
      <table class="table-c">
        <tr>
-         <td style="width: 50%"><strong>EMPLEADO: <?php echo $row['NOMBRECOMPLETO']; ?></strong></td>
+         <td style="width: 50%"><strong>EMPLEADO: <?php echo $row['NOMBRECOMPLETO']; ?> <br>NIT: <?php echo $row['NIT']; ?></strong></button></td>
          <td style="width: 50%"><strong>CARGO: <?php echo strtoupper($row['PUESTOEMPRESA']); ?></strong></td>
        </tr>
      </table>
@@ -8312,16 +8314,16 @@ group by E.IdEmpleado
        <tr style="height: 200px">
          <td><center><?php echo $row['IDEMPLEADO']; ?></center></br></br></br></br></br></br></td>
          <td> SALARIO</br>EXTRAS</br>DIAS:<?php echo $row['DIAS']; ?> </br></br></br><strong>TOTAL DEVENGADO</strong></td>
-         <td>$<?php echo $row['SALARIO']; ?></br>$<?php echo $row['EXTRA']; ?></br></br></br></br></br><strong>$<?php echo $row['TOTALSALARIO']; ?></strong></td>
+         <td>$<?php echo $row['SALARIO']; ?></br>$<?php echo $row['EXTRA']; ?></br></br></br></br><strong>$<?php echo $row['TOTALSALARIO']; ?></strong></td>
          <td>ISSS</br>AFP</br>IPSFA</br>RENTA</br>OTROS</br></br><strong>TOTAL DESCUENTO</strong></td>
-         <td>$<?php echo $row['ISSS']; ?></br>$<?php echo $row['AFP']; ?></br>$<?php echo $row['IPSFA']; ?></br>$<?php echo $row['RENTA']; ?></br>$<?php echo $row['ANTICIPOS']; ?></br></br><strong>$<?php echo $row['TOTALPERCEPCION']; ?></strong></td>
+         <td>$<?php echo $row['ISSS']; ?></br>$<?php echo $row['AFP']; ?></br>$<?php echo $row['IPSFA']; ?></br>$<?php echo $row['RENTA']; ?></br>$<?php echo $row['ANTICIPOS']; ?></br></br><strong>$<?php echo $row['TOTALPERCEPCION'] + $row['ANTICIPOS']; ?></strong></td>
        </tr>
      </table>
      </br>
      <table class="table-c">
        <tr>
          <h3><td style="width: 50%" align="left"><strong>RECIBI CONFORME: ________________________________<strong></td><h3>
-         <h3><td style="width: 50%" align="right"><strong>NETO A PAGAR: $<?php echo $row['SALARIOLIQUIDO']; ?><strong></td><h3>
+         <h3><td style="width: 50%" align="right"><strong>NETO A PAGAR: $<?php echo $row['SALARIOLIQUIDO']; ?> <br>BANCO: <?php echo $row['BANCO']; ?><br>CUENTA: <?php echo $row['CUENTA']; ?> <strong></td><h3>
        </tr>
      </table>
      </br>
@@ -8329,10 +8331,7 @@ group by E.IdEmpleado
      </br>
      </br>
      </br>
-     </br>
-     </br>
-     </br>
-     </br>
+  
      <h4 class="page">
      <div class="col-xs-2">
      </div>
@@ -8361,42 +8360,42 @@ group by E.IdEmpleado
     </h5>
     <table class="table-c">
       <tr>
-        <td style="width: 50%"><strong>EMPLEADO: <?php echo $row['NOMBRECOMPLETO']; ?></strong></td>
+        <td style="width: 50%"><strong>EMPLEADO: <?php echo $row['NOMBRECOMPLETO']; ?> <br>NIT: <?php echo $row['NIT']; ?></strong></button></td>
         <td style="width: 50%"><strong>CARGO: <?php echo strtoupper($row['PUESTOEMPRESA']); ?></strong></td>
       </tr>
     </table>
     </br>
     <table class="table-c">
-      <tr>
-        <td style="width: 10%"><center><strong>ID EMPLEADO</strong></center></td>
-        <td style="width: 30%"><center><strong>INGRESOS</strong></center></td>
-        <td style="width: 10%"><center><strong>MONTO</strong></center></td>
-        <td style="width: 30%"><center><strong>DESCUENTOS</strong></center></td>
-        <td style="width: 10%"><center><strong>MONTO</strong></center></td>
-      </tr>
-      <tr style="height: 200px">
-      <td><center><?php echo $row['IDEMPLEADO']; ?></center></br></br></br></br></br></br></td>
-      <td> SALARIO</br>EXTRAS</br>DIAS:<?php echo $row['DIAS']; ?> </br></br></br><strong>TOTAL DEVENGADO</strong></td>
-      <td>$<?php echo $row['SALARIO']; ?></br>$<?php echo $row['EXTRA']; ?></br></br></br></br></br><strong>$<?php echo $row['TOTALSALARIO']; ?></strong></td>
-        <td>ISSS</br>AFP</br>IPSFA</br>RENTA</br>OTROS</br></br><strong>TOTAL DESCUENTO</strong></td>
-        <td>$<?php echo $row['ISSS']; ?></br>$<?php echo $row['AFP']; ?></br>$<?php echo $row['IPSFA']; ?></br>$<?php echo $row['RENTA']; ?></br>$<?php echo $row['ANTICIPOS']; ?></br></br><strong>$<?php echo $row['TOTALPERCEPCION']; ?></strong></td>
-      </tr>
-    </table>
-    </br>
-    <table class="table-c">
-      <tr>
-        <h3><td style="width: 50%" align="left"><strong>RECIBI CONFORME: ________________________________<strong></td><h3>
-        <h3><td style="width: 50%" align="right"><strong>NETO A PAGAR: $<?php echo $row['SALARIOLIQUIDO']; ?><strong></td><h3>
-      </tr>
-    </table>
-    </br>
-    </br>
+       <tr>
+         <td style="width: 10%"><center><strong>ID EMPLEADO</strong></center></td>
+         <td style="width: 30%"><center><strong>INGRESOS</strong></center></td>
+         <td style="width: 10%"><center><strong>MONTO</strong></center></td>
+         <td style="width: 30%"><center><strong>DESCUENTOS</strong></center></td>
+         <td style="width: 10%"><center><strong>MONTO</strong></center></td>
+       </tr>
+       <tr style="height: 200px">
+         <td><center><?php echo $row['IDEMPLEADO']; ?></center></br></br></br></br></br></br></td>
+         <td> SALARIO</br>EXTRAS</br>DIAS:<?php echo $row['DIAS']; ?> </br></br></br><strong>TOTAL DEVENGADO</strong></td>
+         <td>$<?php echo $row['SALARIO']; ?></br>$<?php echo $row['EXTRA']; ?></br></br></br></br><strong>$<?php echo $row['TOTALSALARIO']; ?></strong></td>
+         <td>ISSS</br>AFP</br>IPSFA</br>RENTA</br>OTROS</br></br><strong>TOTAL DESCUENTO</strong></td>
+         <td>$<?php echo $row['ISSS']; ?></br>$<?php echo $row['AFP']; ?></br>$<?php echo $row['IPSFA']; ?></br>$<?php echo $row['RENTA']; ?></br>$<?php echo $row['ANTICIPOS']; ?></br></br><strong>$<?php echo $row['TOTALPERCEPCION'] + $row['ANTICIPOS']; ?></strong></td>
+       </tr>
+     </table>
+     </br>
+     <table class="table-c">
+       <tr>
+         <h3><td style="width: 50%" align="left"><strong>RECIBI CONFORME: ________________________________<strong></td><h3>
+         <h3><td style="width: 50%" align="right"><strong>NETO A PAGAR: $<?php echo $row['SALARIOLIQUIDO']; ?> <br>BANCO: <?php echo $row['BANCO']; ?><br>CUENTA: <?php echo $row['CUENTA']; ?> <strong></td><h3>
+       </tr>
+     </table>
     </br>
     </br>
     </br>
     </br>
     </br>
     </br>
+    </br>
+    
 <?php
   }
   ?>
