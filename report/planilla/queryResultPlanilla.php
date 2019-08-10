@@ -12267,4 +12267,4 @@ LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
 WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 0 and  P.FechaTransaccion between '$FechaIni' and '$FechaFin'
 group by E.IdEmpleado";
 
- $resultadoqueryplanilla = $mysqli->query($queryplanilla);
+$resultadoqueryplanilla = $mysqli->query($queryplanilla);

@@ -23,7 +23,9 @@ $FechaFin = str_replace('/',"-", $_POST['FechaFin'] );
 
 
 $diaIni = substr($FechaIni, 8, 2);
-$diaFin = substr($FechaFin, 8, 2);
+ $diaFin = substr($FechaFin, 8, 2);
+ $mesfecha = substr($FechaFin, 5, 2);
+
 if(($diaIni = substr($FechaIni, 8, 2)) >= 01 and ($diaFin = substr($FechaFin, 8, 2)) <= 15){
   $quincena = 1;
 }
@@ -36,68 +38,199 @@ else{
 
 
 
-$queryplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO', SUM(ho.MontoHonorario) as 'MONTO', SUM(ho.MontoISRHonorarios) as 'RENTA', SUM(ho.MontoHonorario) as 'LIQUIDO' from honorario ho
-LEFT JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
-WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
+$queryplanilla = "SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15  as 'DIAS',
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+0.00 as 'ANTICIPOS',
+SUM(P.Honorario) as 'TOTAL'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1
+and E.IdEmpleado NOT IN ( SELECT IdEmpleado FROM PLANILLA WHERE FechaTransaccion between '$FechaIni' AND '$FechaFin' group by IdEmpleado)
+group by E.IdEmpleado
+
+union all
+
+SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15 - (CASE WHEN (SELECT SUM(P.DiasIncapacidad) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasIncapacidad) )
+END )
+- (CASE WHEN (SELECT SUM(P.DiasPermiso) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasPermiso) )
+END ) as 'DIAS',
+
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+(CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
+) END) as 'ANTICIPOS',
+((SUM(P.Honorario)) - (CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)) END) - (SUM(P.ISRPlanilla))) as 'TOTALPAGAR'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 and  P.FechaTransaccion between '$FechaIni' and '$FechaFin'
 group by E.IdEmpleado";
 
-             $mes = strftime("%B");
-                 if($mes == 'January'){
-                     $mes = 'Enero';
-                 }
-                 elseif($mes == 'February'){
-                     $mes = 'Febrero';
-                 }
-                 elseif($mes == 'March'){
-                     $mes = 'Marzo';
-                 }
-                 elseif($mes == 'April'){
-                     $mes = 'Abril';
-                 }
-                 elseif($mes == 'May'){
-                     $mes = 'Mayo';
-                 }
-                 elseif($mes == 'June'){
-                     $mes = 'Junio';
-                 }
-                 elseif($mes == 'July'){
-                     $mes = 'Julio';
-                 }
-                 elseif($mes == 'August'){
-                     $mes = 'Agosto';
-                 }
-                 elseif($mes == 'September'){
-                     $mes = 'Septiembre';
-                 }
-                 elseif($mes == 'October'){
-                     $mes = 'Octubre';
-                 }
-                 elseif($mes == 'November'){
-                     $mes = 'Noviembre';
-                 }
-                 else{
-                     $mes = 'Diciembre';
-                 }
+$mes = $mesfecha;
+      if($mes == '01'){
+          $mes = 'Enero';
+      }
+      elseif($mes == '02'){
+          $mes = 'Febrero';
+      }
+      elseif($mes == '03'){
+          $mes = 'Marzo';
+      }
+      elseif($mes == '04'){
+          $mes = 'Abril';
+      }
+      elseif($mes == '05'){
+          $mes = 'Mayo';
+      }
+      elseif($mes == '06'){
+          $mes = 'Junio';
+      }
+      elseif($mes == '07'){
+          $mes = 'Julio';
+      }
+      elseif($mes == '08'){
+          $mes = 'Agosto';
+      }
+      elseif($mes == '09'){
+          $mes = 'Septiembre';
+      }
+      elseif($mes == '10'){
+          $mes = 'Octubre';
+      }
+      elseif($mes == '11'){
+          $mes = 'Noviembre';
+      }
+      else{
+          $mes = 'Diciembre';
+      }
 
-             $anio = date("Y");
+   $anio = substr($FechaIni, 0, 4);
 
 
-             $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO', CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END  as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - (CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
-             INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
-             LEFT JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
-             WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
-             group by E.IdEmpleado";
+             $querytotplanilla = "SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15  as 'DIAS',
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+0.00 as 'ANTICIPOS',
+SUM(P.Honorario) as 'TOTAL'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1
+and E.IdEmpleado NOT IN ( SELECT IdEmpleado FROM PLANILLA WHERE FechaTransaccion between '$FechaIni' AND '$FechaFin' group by IdEmpleado)
+group by E.IdEmpleado
+
+union all
+
+SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15 - (CASE WHEN (SELECT SUM(P.DiasIncapacidad) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasIncapacidad) )
+END )
+- (CASE WHEN (SELECT SUM(P.DiasPermiso) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasPermiso) )
+END ) as 'DIAS',
+
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+(CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
+) END) as 'ANTICIPOS',
+((SUM(P.Honorario)) - (CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)) END) - (SUM(P.ISRPlanilla))) as 'TOTALPAGAR'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 and  P.FechaTransaccion between '$FechaIni' and '$FechaFin'
+group by E.IdEmpleado";
 
                  $resultadoqueryplanilla = $mysqli->query($querytotplanilla);
 
 
-             $querytotplanilla = "SELECT CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
-             SUM(ho.MontoHonorario) as 'MONTO', CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END  as 'ANTICIPOS', SUM(ho.MontoISRHonorarios) as 'RENTA', (SUM(ho.MontoPagar) - (CASE WHEN SUM(AN.MontoAnticipo) IS NULL THEN 0.00 ELSE SUM(AN.MontoAnticipo) END)) as 'LIQUIDO', SUM(ho.ISSSHonorario) as 'ISSS', SUM(ho.AFPHonorario) as 'AFP' from honorario ho
-             INNER JOIN empleado E on ho.IdEmpleado = E.IdEmpleado
-             LEFT JOIN anticipos AN on AN.IdEmpleado = E.IdEmpleado
-             WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 AND ho.FechaHonorario between '$FechaIni' and '$FechaFin'
-             group by E.IdEmpleado";
+             $querytotplanilla = "SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15  as 'DIAS',
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+0.00 as 'ANTICIPOS',
+SUM(P.Honorario) as 'TOTAL'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1
+and E.IdEmpleado NOT IN ( SELECT IdEmpleado FROM PLANILLA WHERE FechaTransaccion between '$FechaIni' AND '$FechaFin' group by IdEmpleado)
+group by E.IdEmpleado
+
+union all
+
+SELECT ba.DescripcionBanco as 'BANCO', e.CBancaria as 'CUENTA', e.nit as 'NIT', 
+pu.DescripcionPuestoEmpresa as 'PUESTOEMPRESA', E.IdEmpleado as 'IDEMPLEADO', CONCAT(E.PrimerNomEmpleado,' ',E.SegunNomEmpleado,' ',E.PrimerApellEmpleado,' ',E.SegunApellEmpleado) AS 'NOMBRECOMPLETO',
+15 - (CASE WHEN (SELECT SUM(P.DiasIncapacidad) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasIncapacidad) )
+END )
+- (CASE WHEN (SELECT SUM(P.DiasPermiso) )  IS NULL
+THEN 0 ELSE (SELECT SUM(P.DiasPermiso) )
+END ) as 'DIAS',
+
+SUM(P.Honorario) as 'SALARIO',
+(CASE WHEN (SELECT SUM(AFPPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(AFPPlanilla)
+) END) as 'AFP',
+(CASE WHEN (SELECT SUM(ISSSPlanilla)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(ISSSPlanilla)
+) END) as 'ISSS',
+SUM(P.ISRPlanilla) as 'RENTA',
+(CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)
+) END) as 'ANTICIPOS',
+((SUM(P.Honorario)) - (CASE WHEN (SELECT SUM(Anticipos)  )  IS NULL THEN 0.00 ELSE (SELECT SUM(Anticipos)) END) - (SUM(P.ISRPlanilla))) as 'TOTALPAGAR'
+
+
+FROM Empleado E
+LEFT JOIN Planilla P on E.IdEmpleado = P.IdEmpleado
+LEFT JOIN puestoempresa pu on  E.IdPuestoEmpresa = pu.IdPuestoEmpresa
+LEFT JOIN banco ba on e.IdBanco = ba.IdBanco
+WHERE E.EmpleadoActivo = 1 and E.FechaDespido IS NULL AND E.NoDependiente = 1 and  P.FechaTransaccion between '$FechaIni' and '$FechaFin'
+group by E.IdEmpleado";
 
                  $resultadoquerytotplanilla = $mysqli->query($querytotplanilla);
 
@@ -111,19 +244,19 @@ group by E.IdEmpleado";
 
                  while ($test = $resultadoquerytotplanilla->fetch_assoc())
                             {
-                                $ttothonorario += $test['MONTO'];
+                                $ttothonorario += $test['SALARIO'];
                                 $ttotisr += $test['RENTA'];
                                 $ttotisss += $test['ISSS'];
                                 $ttotafp += $test['AFP'];
                                 $ttotanticipos += $test['ANTICIPOS'];
-                                $ttothonorariotot += $test['LIQUIDO'];
+                                $ttothonorariotot += $test['TOTAL'];
 
 
                                 $nombreCom = $test['NOMBRECOMPLETO'];
-                                $tothonorario = $test['MONTO'];
+                                $tothonorario = $test['SALARIO'];
                                 $totisr = $test['RENTA'];
                                 $totanticipos = $test['ANTICIPOS'];
-                                $tothonorariototal = $test['LIQUIDO'];
+                                $tothonorariototal = $test['TOTAL'];
 
                             }
 
@@ -223,10 +356,10 @@ group by E.IdEmpleado";
                                   {
                                        echo"<tr>";
                                        echo"<td width='90px'><center>".$test['NOMBRECOMPLETO']."</center></td>";
-                                       echo"<td width='60px'><center>$ ".$test['MONTO']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['SALARIO']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['RENTA']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['ANTICIPOS']."</center></td>";
-                                       echo"<td width='60px'><center>$ ".$test['LIQUIDO']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['TOTAL']."</center></td>";
                                   }
                                   ?>
 
@@ -278,7 +411,7 @@ group by E.IdEmpleado";
                                        echo"<td width='60px'><center>$ ".$test['MONTO']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['RENTA']."</center></td>";
                                        echo"<td width='60px'><center>$ ".$test['ANTICIPOS']."</center></td>";
-                                       echo"<td width='60px'><center>$ ".$test['LIQUIDO']."</center></td>";
+                                       echo"<td width='60px'><center>$ ".$test['TOTAL']."</center></td>";
                                 }
                                 ?>
 
@@ -306,6 +439,9 @@ group by E.IdEmpleado";
                         <button class="btn btn-success btn-raised btn-imprimir">
                                  IMPRIMIR PLANILLA
                         </button>
+                        <button class="btn btn-warning btn-raised btn-boleta">
+                             IMPRIMIR BOLETAS
+                    </button>
                       </center>
 
                     </div>
@@ -326,6 +462,10 @@ group by E.IdEmpleado";
       <input type="text" id="FechaIni" name="FechaIni" value="<?php echo $_POST['FechaIni'];?>" />
       <input type="text" id="FechaFin" name="FechaFin" value="<?php echo $_POST['FechaFin'];?>" />
       <input type="text" id="Tipo" name="Tipo" value="<?php echo $_POST['Tipo'];?>" />
+    </form>
+    <form id="frmboleta" action="../../report/planillanodependiente/boletaspago" method="post" target="_blank" class="hidden">
+                <input type="text" id="FechaIni" name="FechaIni" value="<?php echo $_POST['FechaIni'];?>" />
+      <input type="text" id="FechaFin" name="FechaFin" value="<?php echo $_POST['FechaFin'];?>" />
     </form>
 </body>
 <!--   Core JS Files   -->
